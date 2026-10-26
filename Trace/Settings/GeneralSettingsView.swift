@@ -58,15 +58,14 @@ struct GeneralSettingsView: View {
                             Label("Trace needs Accessibility access to paste for you.",
                                   systemImage: "hand.raised.fill")
                                 .foregroundStyle(.secondary)
-                            Text("Already allowed? After an update, remove Trace from the list with − and allow it again.")
+                            Text("Already allowed? Click Grant Access, then switch Trace on again in the list.")
                                 .font(.caption)
                                 .foregroundStyle(.tertiary)
                                 .padding(.leading, 26)
                         }
                         Spacer()
                         Button("Grant Access…") {
-                            Paster.requestAccess()
-                            NSWorkspace.shared.open(Links.accessibilitySettings)
+                            Paster.refreshAccess()
                         }
                     }
                 }

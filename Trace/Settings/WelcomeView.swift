@@ -41,7 +41,7 @@ struct WelcomeView: View {
                             .foregroundStyle(.green)
                     } else {
                         Button("Allow…") {
-                            Paster.requestAccess()
+                            Paster.refreshAccess()
                         }
                     }
                 }

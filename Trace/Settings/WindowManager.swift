@@ -88,9 +88,16 @@ final class WindowManager: NSObject, NSWindowDelegate {
         window.center()
     }
 
+    /// Brings a window to the front. Trace normally runs as a menu bar
+    /// (accessory) app, which macOS may refuse to activate; while one of its
+    /// windows is open it becomes a regular app, so the window comes forward
+    /// and shows up in the Dock, ⌘-Tab and Mission Control.
     private func present(_ window: NSWindow?) {
+        guard let window else { return }
+        NSApp.setActivationPolicy(.regular)
+        window.orderFrontRegardless()
+        window.makeKeyAndOrderFront(nil)
         NSApp.activate()
-        window?.makeKeyAndOrderFront(nil)
     }
 
     func windowWillClose(_ notification: Notification) {
@@ -101,6 +108,9 @@ final class WindowManager: NSObject, NSWindowDelegate {
         } else if window === welcomeWindow {
             settings.hasCompletedOnboarding = true
             welcomeWindow = nil
+        }
+        if settingsWindow == nil && welcomeWindow == nil {
+            NSApp.setActivationPolicy(.accessory)
         }
     }
 }

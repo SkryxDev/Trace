@@ -28,6 +28,22 @@ final class Paster {
         _ = AXIsProcessTrustedWithOptions(options)
     }
 
+    /// Clears Trace's entries from the Accessibility list, then asks again.
+    /// An entry left by an older build stays switched on in System Settings
+    /// but no longer matches the app, so macOS keeps reporting no access.
+    static func refreshAccess() {
+        guard !isTrusted, let bundleID = Bundle.main.bundleIdentifier else { return }
+        let reset = Process()
+        reset.executableURL = URL(fileURLWithPath: "/usr/bin/tccutil")
+        reset.arguments = ["reset", "Accessibility", bundleID]
+        reset.standardOutput = FileHandle.nullDevice
+        reset.standardError = FileHandle.nullDevice
+        try? reset.run()
+        reset.waitUntilExit()
+        requestAccess()
+        NSWorkspace.shared.open(Links.accessibilitySettings)
+    }
+
     func copy(_ item: ClipItem, plainText: Bool = false) {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()

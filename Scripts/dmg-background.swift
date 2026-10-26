@@ -66,10 +66,10 @@ func render(scale: CGFloat) -> NSBitmapImageRep {
     let space = CGColorSpace(name: CGColorSpace.sRGB)!
     let h = size.height
 
-    // Deep indigo backdrop with the brand gradient.
+    // Light lavender backdrop: Finder always draws icon labels in black here.
     let background = CGGradient(colorsSpace: space,
-                                colors: [srgb(0x2E2A8F), srgb(0x1B1752), srgb(0x100D33)] as CFArray,
-                                locations: [0, 0.55, 1])!
+                                colors: [srgb(0xFFFFFF), srgb(0xF1EEFF), srgb(0xE2DCFF)] as CFArray,
+                                locations: [0, 0.5, 1])!
     context.drawLinearGradient(background, start: CGPoint(x: 0, y: h), end: CGPoint(x: size.width, y: 0),
                                options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
 
@@ -80,20 +80,22 @@ func render(scale: CGFloat) -> NSBitmapImageRep {
         context.drawRadialGradient(gradient, startCenter: center, startRadius: 0, endCenter: center,
                                    endRadius: radius, options: [])
     }
-    glow(CGPoint(x: 120, y: h - 40), radius: 340, color: 0x8B7BFF, alpha: 0.45)
-    glow(CGPoint(x: 600, y: 20), radius: 300, color: 0x3FA9FF, alpha: 0.22)
-    glow(CGPoint(x: 470, y: h - 215), radius: 200, color: 0x8B7BFF, alpha: 0.12)
+    glow(CGPoint(x: 90, y: h - 30), radius: 320, color: 0xB9AEFF, alpha: 0.45)
+    glow(CGPoint(x: 610, y: 10), radius: 320, color: 0x9CC8FF, alpha: 0.35)
 
     // Glass-like plates behind the two icons.
     for slot in [appSlot, applicationsSlot] {
         let center = CGPoint(x: slot.x, y: h - slot.y + 8)
         let plate = CGRect(x: center.x - 92, y: center.y - 100, width: 184, height: 184)
         let path = CGPath(roundedRect: plate, cornerWidth: 40, cornerHeight: 40, transform: nil)
+        context.saveGState()
+        context.setShadow(offset: CGSize(width: 0, height: -6), blur: 22, color: srgb(0x4B3FD6, alpha: 0.16))
         context.addPath(path)
-        context.setFillColor(srgb(0xFFFFFF, alpha: 0.06))
+        context.setFillColor(srgb(0xFFFFFF, alpha: 0.62))
         context.fillPath()
+        context.restoreGState()
         context.addPath(path)
-        context.setStrokeColor(srgb(0xFFFFFF, alpha: 0.14))
+        context.setStrokeColor(srgb(0xFFFFFF, alpha: 0.9))
         context.setLineWidth(1)
         context.strokePath()
     }
@@ -106,7 +108,7 @@ func render(scale: CGFloat) -> NSBitmapImageRep {
     arrow.move(to: start)
     arrow.addCurve(to: end, control1: CGPoint(x: start.x + 30, y: arrowY + 26),
                    control2: CGPoint(x: end.x - 30, y: arrowY + 26))
-    context.setStrokeColor(srgb(0xFFFFFF, alpha: 0.75))
+    context.setStrokeColor(srgb(0x5B4FE0, alpha: 0.8))
     context.setLineWidth(2.5)
     context.setLineCap(.round)
     context.setLineDash(phase: 0, lengths: [1, 8])
@@ -129,13 +131,14 @@ func render(scale: CGFloat) -> NSBitmapImageRep {
     context.strokePath()
 
     // Title, hint and footer.
+    let ink = NSColor(srgbRed: 0.13, green: 0.11, blue: 0.33, alpha: 1)
     drawMark(in: context, rect: CGRect(x: size.width / 2 - 58, y: h - 66, width: 28, height: 28),
-             color: srgb(0xFFFFFF))
-    drawText("Trace", size: 26, weight: .bold, color: .white, centerX: size.width / 2 + 16, top: h - 34)
+             color: srgb(0x5B4FE0))
+    drawText("Trace", size: 26, weight: .bold, color: ink, centerX: size.width / 2 + 16, top: h - 34)
     drawText("Drag Trace into Applications to install", size: 13, weight: .medium,
-             color: NSColor.white.withAlphaComponent(0.72), centerX: size.width / 2, top: h - 76)
+             color: ink.withAlphaComponent(0.62), centerX: size.width / 2, top: h - 76)
     drawText("Free software · GNU GPL v3.0 · github.com/SkryxDev/Trace", size: 10.5, weight: .regular,
-             color: NSColor.white.withAlphaComponent(0.42), centerX: size.width / 2, top: 64)
+             color: ink.withAlphaComponent(0.42), centerX: size.width / 2, top: 64)
 
     NSGraphicsContext.current = nil
     return rep

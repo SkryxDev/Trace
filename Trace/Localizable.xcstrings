@@ -171,12 +171,12 @@
         }
       }
     },
-    "Already allowed? After an update, remove Trace from the list with − and allow it again.": {
+    "Already allowed? Click Grant Access, then switch Trace on again in the list.": {
       "localizations": {
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Già consentito? Dopo un aggiornamento, rimuovi Trace dall'elenco con − e consentilo di nuovo."
+            "value": "Già consentito? Fai clic su Concedi accesso, poi riattiva Trace nell'elenco."
           }
         }
       }
