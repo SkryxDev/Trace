@@ -11,45 +11,37 @@ struct ClipRow: View {
     let index: Int
     let isSelected: Bool
     let store: HistoryStore
+    let selection: Namespace.ID
     let actions: ClipRowActions
 
     @State private var thumbnail: NSImage?
     @State private var isHovered = false
 
-    private static let leadingSize: CGFloat = 40
+    private static let iconSize: CGFloat = 38
+    private static let previewHeight: CGFloat = 96
+    private static let cornerRadius: CGFloat = 16
 
     var body: some View {
-        HStack(spacing: 11) {
-            leading
-                .frame(width: Self.leadingSize, height: Self.leadingSize)
-
-            VStack(alignment: .leading, spacing: 3) {
-                title
-                metadata
+        Group {
+            if item.kind == .image {
+                imageCard
+            } else {
+                standardCard
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            trailing
         }
         .padding(.horizontal, 10)
-        .padding(.vertical, 8)
-        .background {
-            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .fill(backgroundStyle)
+        .padding(.vertical, 9)
+        .background { background }
+        .contentShape(.rect(cornerRadius: Self.cornerRadius))
+        .onHover { hovering in
+            withAnimation(.easeOut(duration: 0.12)) { isHovered = hovering }
         }
-        .overlay {
-            RoundedRectangle(cornerRadius: 15, style: .continuous)
-                .strokeBorder(Color.accentColor.opacity(isSelected ? 0.55 : 0), lineWidth: 1)
-        }
-        .contentShape(.rect(cornerRadius: 15))
-        .animation(.easeOut(duration: 0.12), value: isSelected)
-        .animation(.easeOut(duration: 0.12), value: isHovered)
-        .onHover { isHovered = $0 }
         .onTapGesture { actions.paste(item, false) }
         .contextMenu { menu }
         .task(id: item.id) {
             guard item.kind == .image || item.kind == .files else { return }
-            thumbnail = await store.thumbnail(for: item, side: Self.leadingSize)
+            let side = item.kind == .image ? PanelController.size.width : Self.iconSize
+            thumbnail = await store.thumbnail(for: item, side: side)
         }
         .accessibilityElement(children: .combine)
         .accessibilityAddTraits(isSelected ? [.isSelected, .isButton] : .isButton)
@@ -58,9 +50,70 @@ struct ClipRow: View {
         .accessibilityAction(named: Text("Delete")) { actions.delete(item) }
     }
 
-    private var backgroundStyle: AnyShapeStyle {
-        if isSelected { return AnyShapeStyle(Color.accentColor.opacity(0.2)) }
-        return AnyShapeStyle(Color.primary.opacity(isHovered ? 0.08 : 0.04))
+    // MARK: - Layouts
+
+    private var standardCard: some View {
+        HStack(spacing: 11) {
+            leading
+                .frame(width: Self.iconSize, height: Self.iconSize)
+            VStack(alignment: .leading, spacing: 3) {
+                title
+                metadata
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            trailing
+        }
+    }
+
+    private var imageCard: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            ZStack {
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .fill(Color.primary.opacity(0.05))
+                if let thumbnail {
+                    Image(nsImage: thumbnail)
+                        .resizable()
+                        .aspectRatio(contentMode: .fill)
+                        .transition(.opacity)
+                } else {
+                    Image(systemName: "photo")
+                        .font(.system(size: 22, weight: .light))
+                        .foregroundStyle(.tertiary)
+                }
+            }
+            .frame(maxWidth: .infinity)
+            .frame(height: Self.previewHeight)
+            .clipShape(.rect(cornerRadius: 11, style: .continuous))
+            .overlay {
+                RoundedRectangle(cornerRadius: 11, style: .continuous)
+                    .strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5)
+            }
+            .animation(.easeOut(duration: 0.2), value: thumbnail != nil)
+
+            HStack {
+                metadata
+                Spacer(minLength: 4)
+                trailing
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var background: some View {
+        ZStack {
+            RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous)
+                .fill(Color.primary.opacity(isHovered ? 0.085 : 0.045))
+            if isSelected {
+                // Shared between rows, so the highlight glides as the selection moves.
+                RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous)
+                    .fill(Color.accentColor.opacity(0.22))
+                    .overlay {
+                        RoundedRectangle(cornerRadius: Self.cornerRadius, style: .continuous)
+                            .strokeBorder(Color.accentColor.opacity(0.6), lineWidth: 1)
+                    }
+                    .matchedGeometryEffect(id: "selection", in: selection)
+            }
+        }
     }
 
     // MARK: - Pieces
@@ -70,15 +123,20 @@ struct ClipRow: View {
         if let thumbnail {
             Image(nsImage: thumbnail)
                 .resizable()
-                .aspectRatio(contentMode: item.kind == .image ? .fill : .fit)
-                .frame(width: Self.leadingSize, height: Self.leadingSize)
-                .clipShape(.rect(cornerRadius: 9, style: .continuous))
+                .aspectRatio(contentMode: .fit)
+        } else if let color = item.kind == .text ? item.preview.hexColor : nil {
+            RoundedRectangle(cornerRadius: 10, style: .continuous)
+                .fill(color)
+                .overlay {
+                    RoundedRectangle(cornerRadius: 10, style: .continuous)
+                        .strokeBorder(Color.primary.opacity(0.15), lineWidth: 0.5)
+                }
         } else {
             RoundedRectangle(cornerRadius: 10, style: .continuous)
-                .fill(tint.opacity(0.16))
+                .fill(tint.gradient.opacity(0.18))
                 .overlay {
                     Image(systemName: symbol)
-                        .font(.system(size: 16, weight: .medium))
+                        .font(.system(size: 15, weight: .semibold))
                         .foregroundStyle(tint)
                 }
         }
@@ -88,13 +146,12 @@ struct ClipRow: View {
     private var title: some View {
         switch item.kind {
         case .image:
-            Text("Image")
-                .font(.system(size: 13, weight: .medium))
+            EmptyView()
         case .files:
             let count = item.files?.count ?? 0
             if count > 1 {
                 Text("\(count) files")
-                    .font(.system(size: 13, weight: .medium))
+                    .font(.system(size: 13, weight: .semibold))
             }
             Text(verbatim: item.preview)
                 .font(.system(size: 13, weight: count > 1 ? .regular : .medium))
@@ -102,15 +159,20 @@ struct ClipRow: View {
                 .truncationMode(.middle)
                 .foregroundStyle(count > 1 ? .secondary : .primary)
         case .link:
+            if let host = item.webURL?.host() {
+                Text(verbatim: host.replacingOccurrences(of: "www.", with: ""))
+                    .font(.system(size: 13, weight: .semibold))
+                    .lineLimit(1)
+            }
             Text(verbatim: item.preview)
-                .font(.system(size: 13))
+                .font(.system(size: 12))
                 .foregroundStyle(Color.accentColor)
-                .lineLimit(2)
+                .lineLimit(1)
                 .truncationMode(.middle)
         case .text, .richText:
             Text(verbatim: item.preview)
                 .font(.system(size: 13))
-                .lineLimit(2)
+                .lineLimit(3)
         }
     }
 
@@ -119,7 +181,7 @@ struct ClipRow: View {
             if let bundleID = item.sourceBundleID, let icon = AppInfo.icon(for: bundleID) {
                 Image(nsImage: icon)
                     .resizable()
-                    .frame(width: 12, height: 12)
+                    .frame(width: 13, height: 13)
             }
             Text(verbatim: metadataText)
                 .lineLimit(1)
@@ -138,9 +200,8 @@ struct ClipRow: View {
         return parts.joined(separator: " · ")
     }
 
-    @ViewBuilder
     private var trailing: some View {
-        if isHovered {
+        ZStack(alignment: .trailing) {
             HStack(spacing: 2) {
                 RowButton(symbol: item.isPinned ? "pin.slash" : "pin", label: item.isPinned ? "Unpin" : "Pin") {
                     actions.pin(item)
@@ -149,14 +210,16 @@ struct ClipRow: View {
                     actions.delete(item)
                 }
             }
-            .transition(.opacity)
-        } else {
+            .opacity(isHovered ? 1 : 0)
+            .scaleEffect(isHovered ? 1 : 0.85, anchor: .trailing)
+            .allowsHitTesting(isHovered)
+
             HStack(spacing: 6) {
                 if item.isPinned {
                     Image(systemName: "pin.fill")
                         .font(.system(size: 10))
                         .rotationEffect(.degrees(35))
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(Brand.gradient)
                 }
                 if index < 9 {
                     Text(verbatim: "⌘\(index + 1)")
@@ -164,6 +227,7 @@ struct ClipRow: View {
                         .foregroundStyle(.tertiary)
                 }
             }
+            .opacity(isHovered ? 0 : 1)
         }
     }
 
@@ -198,7 +262,7 @@ struct ClipRow: View {
 
     private var tint: Color {
         switch item.kind {
-        case .text: .secondary
+        case .text: .indigo
         case .richText: .orange
         case .link: .blue
         case .image: .purple
@@ -224,12 +288,13 @@ private struct RowButton: View {
         Button(action: action) {
             Image(systemName: symbol)
                 .font(.system(size: 11, weight: .semibold))
+                .contentTransition(.symbolEffect(.replace))
                 .frame(width: 24, height: 24)
                 .background(Circle().fill(Color.primary.opacity(isHovered ? 0.12 : 0)))
                 .contentShape(Circle())
         }
         .buttonStyle(.plain)
-        .foregroundStyle(.secondary)
+        .foregroundStyle(isHovered ? .primary : .secondary)
         .help(label)
         .accessibilityLabel(label)
         .onHover { isHovered = $0 }

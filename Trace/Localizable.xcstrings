@@ -1,0 +1,1069 @@
+{
+  "sourceLanguage": "en",
+  "strings": {
+    "%lld files": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld file"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld files"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld file"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld file"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "%lld items": {
+      "localizations": {
+        "en": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld item"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld items"
+                }
+              }
+            }
+          }
+        },
+        "it": {
+          "variations": {
+            "plural": {
+              "one": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld elemento"
+                }
+              },
+              "other": {
+                "stringUnit": {
+                  "state": "translated",
+                  "value": "%lld elementi"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "A tiny, fast clipboard history for your Mac.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Una cronologia degli appunti minuscola e veloce per il tuo Mac."
+          }
+        }
+      }
+    },
+    "About": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Info"
+          }
+        }
+      }
+    },
+    "About Trace": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Informazioni su Trace"
+          }
+        }
+      }
+    },
+    "Add App…": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aggiungi app…"
+          }
+        }
+      }
+    },
+    "All items except pinned ones will be deleted. This can't be undone.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Tutti gli elementi tranne quelli fissati verranno eliminati. L'operazione non può essere annullata."
+          }
+        }
+      }
+    },
+    "Allow Accessibility access so the item you choose is pasted right away.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consenti l'accesso Accessibilità così l'elemento scelto viene incollato subito."
+          }
+        }
+      }
+    },
+    "Allow clipboard access": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consenti l'accesso agli appunti"
+          }
+        }
+      }
+    },
+    "Allowed": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consentito"
+          }
+        }
+      }
+    },
+    "Allow…": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Consenti…"
+          }
+        }
+      }
+    },
+    "Ask each time": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chiedi ogni volta"
+          }
+        }
+      }
+    },
+    "At the mouse pointer": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Vicino al puntatore"
+          }
+        }
+      }
+    },
+    "Below the menu bar icon": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Sotto l'icona nella barra dei menu"
+          }
+        }
+      }
+    },
+    "Choosing an item pastes it straight into the app you were using. Otherwise it is only copied.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scegliendo un elemento viene incollato direttamente nell'app che stavi usando. Altrimenti viene solo copiato."
+          }
+        }
+      }
+    },
+    "Clear History": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svuota cronologia"
+          }
+        }
+      }
+    },
+    "Clear History…": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svuota cronologia…"
+          }
+        }
+      }
+    },
+    "Clear search": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cancella ricerca"
+          }
+        }
+      }
+    },
+    "Clear the clipboard history?": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Svuotare la cronologia degli appunti?"
+          }
+        }
+      }
+    },
+    "Click to record a new shortcut": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fai clic per registrare una nuova scorciatoia"
+          }
+        }
+      }
+    },
+    "Clipboard": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Appunti"
+          }
+        }
+      }
+    },
+    "Clipboard access": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Accesso agli appunti"
+          }
+        }
+      }
+    },
+    "Close": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Chiudi"
+          }
+        }
+      }
+    },
+    "Copy": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia"
+          }
+        }
+      }
+    },
+    "Copy something and it will show up here.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copia qualcosa e apparirà qui."
+          }
+        }
+      }
+    },
+    "Couldn't change the login item": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impossibile modificare l'apertura al login"
+          }
+        }
+      }
+    },
+    "Cut": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Taglia"
+          }
+        }
+      }
+    },
+    "Delete": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Elimina"
+          }
+        }
+      }
+    },
+    "Denied": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Negato"
+          }
+        }
+      }
+    },
+    "Edit": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Modifica"
+          }
+        }
+      }
+    },
+    "Exclude": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Escludi"
+          }
+        }
+      }
+    },
+    "Excluded apps": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "App escluse"
+          }
+        }
+      }
+    },
+    "Free software under the": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Software libero con licenza"
+          }
+        }
+      }
+    },
+    "GNU GPL v3.0": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "GNU GPL v3.0"
+          }
+        }
+      }
+    },
+    "General": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Generali"
+          }
+        }
+      }
+    },
+    "Get Started": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Inizia"
+          }
+        }
+      }
+    },
+    "Grant Access…": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Concedi accesso…"
+          }
+        }
+      }
+    },
+    "History": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cronologia"
+          }
+        }
+      }
+    },
+    "If macOS asks whether Trace can paste from other apps, choose Allow.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se macOS chiede se Trace può incollare da altre app, scegli Consenti."
+          }
+        }
+      }
+    },
+    "Ignore passwords and sensitive data": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ignora password e dati sensibili"
+          }
+        }
+      }
+    },
+    "Keep up to": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Conserva fino a"
+          }
+        }
+      }
+    },
+    "Let Trace paste for you": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Lascia che Trace incolli per te"
+          }
+        }
+      }
+    },
+    "Made by": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Creato da"
+          }
+        }
+      }
+    },
+    "Minimize": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riduci a icona"
+          }
+        }
+      }
+    },
+    "More": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Altro"
+          }
+        }
+      }
+    },
+    "No results": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nessun risultato"
+          }
+        }
+      }
+    },
+    "Nothing copied in these apps is ever recorded.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Nulla di ciò che copi in queste app viene registrato."
+          }
+        }
+      }
+    },
+    "Nothing copied yet": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ancora nulla di copiato"
+          }
+        }
+      }
+    },
+    "OK": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "OK"
+          }
+        }
+      }
+    },
+    "Open Link": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri link"
+          }
+        }
+      }
+    },
+    "Open System Settings…": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri Impostazioni di Sistema…"
+          }
+        }
+      }
+    },
+    "Open Trace at login": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri Trace al login"
+          }
+        }
+      }
+    },
+    "Open at login": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri al login"
+          }
+        }
+      }
+    },
+    "Open it from anywhere": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aprilo da qualsiasi app"
+          }
+        }
+      }
+    },
+    "Open the panel": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Apri il pannello"
+          }
+        }
+      }
+    },
+    "Paste": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incolla"
+          }
+        }
+      }
+    },
+    "Paste as Plain Text": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incolla come testo semplice"
+          }
+        }
+      }
+    },
+    "Paste automatically": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incolla automaticamente"
+          }
+        }
+      }
+    },
+    "Pasting": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Incolla"
+          }
+        }
+      }
+    },
+    "Pause Recording": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Metti in pausa la registrazione"
+          }
+        }
+      }
+    },
+    "Permissions": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Permessi"
+          }
+        }
+      }
+    },
+    "Pin": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fissa"
+          }
+        }
+      }
+    },
+    "Pinned": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fissati"
+          }
+        }
+      }
+    },
+    "Pinned items are always kept.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Gli elementi fissati vengono sempre conservati."
+          }
+        }
+      }
+    },
+    "Plain text": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Testo semplice"
+          }
+        }
+      }
+    },
+    "Press %@ or click the icon in the menu bar. You can change the shortcut in Settings.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premi %@ o fai clic sull'icona nella barra dei menu. Puoi cambiare la scorciatoia nelle Impostazioni."
+          }
+        }
+      }
+    },
+    "Press a key combination, or Esc to cancel": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Premi una combinazione di tasti, o Esc per annullare"
+          }
+        }
+      }
+    },
+    "Privacy": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Privacy"
+          }
+        }
+      }
+    },
+    "Quit Trace": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Esci da Trace"
+          }
+        }
+      }
+    },
+    "Recent": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recenti"
+          }
+        }
+      }
+    },
+    "Recording is paused": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registrazione in pausa"
+          }
+        }
+      }
+    },
+    "Redo": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ripeti"
+          }
+        }
+      }
+    },
+    "Remove": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Rimuovi"
+          }
+        }
+      }
+    },
+    "Report an Issue": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Segnala un problema"
+          }
+        }
+      }
+    },
+    "Reset to %@": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ripristina %@"
+          }
+        }
+      }
+    },
+    "Resume": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riprendi"
+          }
+        }
+      }
+    },
+    "Resume Recording": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riprendi la registrazione"
+          }
+        }
+      }
+    },
+    "Search": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Cerca"
+          }
+        }
+      }
+    },
+    "Select All": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Seleziona tutto"
+          }
+        }
+      }
+    },
+    "Settings…": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Impostazioni…"
+          }
+        }
+      }
+    },
+    "Shortcut": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Scorciatoia"
+          }
+        }
+      }
+    },
+    "Show Clipboard History": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra cronologia appunti"
+          }
+        }
+      }
+    },
+    "Show clipboard history": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra cronologia appunti"
+          }
+        }
+      }
+    },
+    "Show in Finder": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mostra nel Finder"
+          }
+        }
+      }
+    },
+    "Skips anything password managers and other apps mark as confidential or temporary.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salta tutto ciò che i gestori di password e altre app segnano come riservato o temporaneo."
+          }
+        }
+      }
+    },
+    "Source Code": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Codice sorgente"
+          }
+        }
+      }
+    },
+    "Start Trace automatically when you log in.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Avvia Trace automaticamente quando accedi."
+          }
+        }
+      }
+    },
+    "This shortcut is already used by another app. Please choose a different one.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Questa scorciatoia è già usata da un'altra app. Scegline un'altra."
+          }
+        }
+      }
+    },
+    "To record what you copy, allow Trace in Privacy & Security › Paste from Other Apps.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Per registrare ciò che copi, consenti Trace in Privacy e sicurezza › Incolla da altre app."
+          }
+        }
+      }
+    },
+    "Trace": {
+      "shouldTranslate": false
+    },
+    "Trace lives in your menu bar and remembers what you copy: text, links, images and files.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trace vive nella barra dei menu e ricorda ciò che copi: testo, link, immagini e file."
+          }
+        }
+      }
+    },
+    "Trace needs Accessibility access to paste for you.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trace ha bisogno dell'accesso Accessibilità per incollare al posto tuo."
+          }
+        }
+      }
+    },
+    "Trace — %@ to open": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trace — %@ per aprire"
+          }
+        }
+      }
+    },
+    "Trace — recording paused": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Trace — registrazione in pausa"
+          }
+        }
+      }
+    },
+    "Try searching for something else.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Prova a cercare qualcos'altro."
+          }
+        }
+      }
+    },
+    "Type shortcut…": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Digita la scorciatoia…"
+          }
+        }
+      }
+    },
+    "Undo": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Annulla"
+          }
+        }
+      }
+    },
+    "Unpin": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Non fissare"
+          }
+        }
+      }
+    },
+    "Version %@ (%@)": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Versione %@ (%@)"
+          }
+        }
+      }
+    },
+    "Welcome to Trace": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Benvenuto in Trace"
+          }
+        }
+      }
+    },
+    "Window": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Finestra"
+          }
+        }
+      }
+    }
+  },
+  "version": "1.0"
+}

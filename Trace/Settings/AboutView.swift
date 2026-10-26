@@ -15,11 +15,19 @@ struct AboutView: View {
 
             Text(verbatim: "Trace")
                 .font(.system(size: 28, weight: .bold, design: .rounded))
-            Text("Version \(Bundle.main.shortVersion) (\(Bundle.main.buildNumber))")
-                .font(.callout)
-                .foregroundStyle(.secondary)
-                .textSelection(.enabled)
-                .padding(.top, 2)
+            HStack(spacing: 6) {
+                Text("Version \(Bundle.main.shortVersion) (\(Bundle.main.buildNumber))")
+                    .font(.callout)
+                    .foregroundStyle(.secondary)
+                    .textSelection(.enabled)
+                Text(verbatim: "BETA")
+                    .font(.system(size: 10, weight: .bold, design: .rounded))
+                    .foregroundStyle(.white)
+                    .padding(.horizontal, 6)
+                    .padding(.vertical, 2)
+                    .background(Brand.gradient, in: .capsule)
+            }
+            .padding(.top, 2)
 
             Text("A tiny, fast clipboard history for your Mac.")
                 .font(.body)

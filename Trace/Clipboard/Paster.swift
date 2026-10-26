@@ -12,6 +12,7 @@ final class Paster {
     private let store: HistoryStore
     private let monitor: ClipboardMonitor
     private let settings: AppSettings
+    private var hasPromptedForAccess = false
 
     init(store: HistoryStore, monitor: ClipboardMonitor, settings: AppSettings) {
         self.store = store
@@ -53,7 +54,11 @@ final class Paster {
         copy(item, plainText: plainText)
         guard settings.autoPaste else { return }
         guard Self.isTrusted else {
-            Self.requestAccess()
+            // Ask once per launch; afterwards just copy, without nagging.
+            if !hasPromptedForAccess {
+                hasPromptedForAccess = true
+                Self.requestAccess()
+            }
             return
         }
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.06) {

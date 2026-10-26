@@ -17,7 +17,11 @@ import QuickLookThumbnailing
 @Observable
 final class HistoryStore {
     /// Newest first. Pinned items are kept here too and survive trimming.
-    private(set) var items: [ClipItem] = []
+    private(set) var items: [ClipItem] = [] {
+        didSet { revision &+= 1 }
+    }
+    /// Bumped on every change, so views can cache work derived from `items`.
+    private(set) var revision = 0
 
     @ObservationIgnored private let indexURL: URL
     @ObservationIgnored private let itemsURL: URL
@@ -27,7 +31,8 @@ final class HistoryStore {
     init(directory: URL = HistoryStore.defaultDirectory) {
         indexURL = directory.appending(path: "history.json")
         itemsURL = directory.appending(path: "Items", directoryHint: .isDirectory)
-        thumbnails.countLimit = 120
+        thumbnails.countLimit = 150
+        thumbnails.totalCostLimit = 24 * 1024 * 1024
         try? FileManager.default.createDirectory(at: itemsURL, withIntermediateDirectories: true)
         load()
     }
@@ -164,8 +169,16 @@ final class HistoryStore {
             return nil
         }
 
-        if let image { thumbnails.setObject(image, forKey: key) }
+        if let image {
+            let cost = pixels * pixels * 4 // upper bound
+            thumbnails.setObject(image, forKey: key, cost: cost)
+        }
         return image
+    }
+
+    /// Frees decoded thumbnails; they are cheap to regenerate.
+    func purgeThumbnails() {
+        thumbnails.removeAllObjects()
     }
 
     nonisolated private static func downsample(url: URL, maxPixels: Int) -> CGImage? {
@@ -205,9 +218,15 @@ final class HistoryStore {
     }
 
     private func load() {
-        if let data = try? Data(contentsOf: indexURL),
-           let decoded = try? JSONDecoder().decode([ClipItem].self, from: data) {
-            items = decoded
+        guard let data = try? Data(contentsOf: indexURL) else { return }
+        do {
+            items = try JSONDecoder().decode([ClipItem].self, from: data)
+        } catch {
+            // Keep an unreadable index (and its data folders) instead of
+            // silently wiping the user's history.
+            let backup = indexURL.deletingPathExtension().appendingPathExtension("unreadable.json")
+            try? FileManager.default.removeItem(at: backup)
+            try? FileManager.default.moveItem(at: indexURL, to: backup)
         }
         removeOrphanedFolders()
     }
@@ -235,6 +254,9 @@ final class HistoryStore {
 
     /// Cleans up data folders left behind by a crash or an older index.
     private func removeOrphanedFolders() {
+        // Never touch data that belongs to an index we could not read.
+        let backup = indexURL.deletingPathExtension().appendingPathExtension("unreadable.json")
+        guard !FileManager.default.fileExists(atPath: backup.path) else { return }
         let known = Set(items.map(\.id.uuidString))
         let itemsURL = itemsURL
         Task.detached(priority: .background) {

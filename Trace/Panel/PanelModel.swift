@@ -26,17 +26,40 @@ final class PanelModel {
         selectedID = visibleItems.first?.id
     }
 
-    var pinnedItems: [ClipItem] { filtered.filter(\.isPinned) }
-    var recentItems: [ClipItem] { filtered.filter { !$0.isPinned } }
-    /// The items in the order they appear on screen.
-    var visibleItems: [ClipItem] { pinnedItems + recentItems }
+    struct Sections {
+        var pinned: [ClipItem] = []
+        var recent: [ClipItem] = []
+        var all: [ClipItem] { pinned + recent }
+    }
 
-    private var filtered: [ClipItem] {
-        let needle = query.trimmingCharacters(in: .whitespaces)
-        guard !needle.isEmpty else { return store.items }
-        return store.items.filter { item in
-            item.preview.localizedStandardContains(needle)
-                || (item.sourceBundleID.map { AppInfo.name(for: $0).localizedStandardContains(needle) } ?? false)
+    @ObservationIgnored private var cachedSections: (query: String, revision: Int, sections: Sections)?
+
+    /// Filtered items, computed once per query / history change and reused
+    /// by every view and key press that needs them.
+    var sections: Sections {
+        let revision = store.revision
+        if let cachedSections, cachedSections.query == query, cachedSections.revision == revision {
+            return cachedSections.sections
+        }
+        let words = query.split(whereSeparator: \.isWhitespace).map(String.init)
+        var sections = Sections()
+        for item in store.items where words.isEmpty || matches(item, words) {
+            if item.isPinned { sections.pinned.append(item) } else { sections.recent.append(item) }
+        }
+        cachedSections = (query, revision, sections)
+        return sections
+    }
+
+    var pinnedItems: [ClipItem] { sections.pinned }
+    var recentItems: [ClipItem] { sections.recent }
+    /// The items in the order they appear on screen.
+    var visibleItems: [ClipItem] { sections.all }
+
+    /// Every word must appear in the text or in the source app's name, in any order.
+    private func matches(_ item: ClipItem, _ words: [String]) -> Bool {
+        let appName = item.sourceBundleID.map(AppInfo.name(for:)) ?? ""
+        return words.allSatisfy { word in
+            item.preview.localizedStandardContains(word) || appName.localizedStandardContains(word)
         }
     }
 

@@ -79,7 +79,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         button.setAccessibilityLabel("Trace")
         button.target = self
         button.action = #selector(statusItemClicked(_:))
-        button.sendAction(on: [.leftMouseDown, .rightMouseDown])
+        // Act on mouse-up: opening a menu from inside the button's mouse-down
+        // tracking loop would leave AppKit waiting for a mouse-up that the
+        // menu already consumed, blocking the global hotkey until the next click.
+        button.sendAction(on: [.leftMouseUp, .rightMouseUp])
         updateStatusItem()
     }
 
@@ -92,7 +95,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
 
     @objc private func statusItemClicked(_ sender: NSStatusBarButton) {
         let event = NSApp.currentEvent
-        if event?.type == .rightMouseDown || event?.modifierFlags.contains(.control) == true {
+        if event?.type == .rightMouseUp || event?.modifierFlags.contains(.control) == true {
             panel.close(animated: false)
             showStatusMenu(from: sender)
         } else if panel.isVisible {
@@ -129,7 +132,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         for item in menu.items where item.action != #selector(NSApplication.terminate(_:)) {
             item.target = self
         }
-        menu.popUp(positioning: nil, at: NSPoint(x: 0, y: button.bounds.height + 6), in: button)
+        // Let the status item present the menu, so it is placed like any other menu bar menu.
+        statusItem.menu = menu
+        button.performClick(nil)
+        statusItem.menu = nil
     }
 
     private func statusItemRect() -> NSRect? {

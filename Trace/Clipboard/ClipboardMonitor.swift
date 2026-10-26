@@ -57,8 +57,10 @@ final class ClipboardMonitor {
         if let source, source == Bundle.main.bundleIdentifier || settings.excludedApps.contains(source) {
             return
         }
-        if let capture = read(source: source) {
-            onCapture?(capture)
+        autoreleasepool {
+            if let capture = read(source: source) {
+                onCapture?(capture)
+            }
         }
     }
 

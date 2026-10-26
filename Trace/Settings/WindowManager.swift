@@ -55,7 +55,9 @@ final class WindowManager: NSObject, NSWindowDelegate {
         tabs.canPropagateSelectedChildViewControllerTitle = true
 
         func addTab(_ view: some View, title: String, symbol: String) {
-            let item = NSTabViewItem(viewController: hostingController(view))
+            let controller = hostingController(view)
+            controller.title = title
+            let item = NSTabViewItem(viewController: controller)
             item.label = title
             item.image = NSImage(systemSymbolName: symbol, accessibilityDescription: title)
             tabs.addTabViewItem(item)

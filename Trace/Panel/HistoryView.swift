@@ -10,48 +10,57 @@ struct HistoryView: View {
     @Bindable var model: PanelModel
     @Bindable var settings: AppSettings
     @FocusState private var isSearchFocused: Bool
+    @Namespace private var selection
+    @State private var hasAppeared = false
+
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
 
     var body: some View {
         VStack(spacing: 10) {
+            header
+                .appearance(hasAppeared, delay: 0, reduceMotion: reduceMotion)
             searchBar
-            if settings.isPaused { pausedBanner }
+                .appearance(hasAppeared, delay: 0.03, reduceMotion: reduceMotion)
+            if settings.isPaused {
+                pausedBanner
+                    .transition(.move(edge: .top).combined(with: .opacity))
+            }
             content
             footer
+                .appearance(hasAppeared, delay: 0.12, reduceMotion: reduceMotion)
         }
-        .padding(12)
+        .padding(.horizontal, 12)
+        .padding(.top, 12)
+        .padding(.bottom, 10)
         .frame(width: PanelController.size.width, height: PanelController.size.height)
+        .animation(.snappy(duration: 0.25), value: settings.isPaused)
         .onAppear {
+            hasAppeared = true
             DispatchQueue.main.async { isSearchFocused = true }
         }
     }
 
-    // MARK: - Search
+    // MARK: - Header
 
-    private var searchBar: some View {
+    private var header: some View {
         HStack(spacing: 8) {
-            Image(systemName: "magnifyingglass")
-                .font(.system(size: 13, weight: .medium))
-                .foregroundStyle(.secondary)
-            TextField("Search clipboard", text: $model.query)
-                .textFieldStyle(.plain)
-                .font(.system(size: 14))
-                .focused($isSearchFocused)
-            if !model.query.isEmpty {
-                Button {
-                    model.query = ""
-                } label: {
-                    Image(systemName: "xmark.circle.fill")
-                }
-                .buttonStyle(.plain)
-                .foregroundStyle(.tertiary)
-                .accessibilityLabel("Clear search")
+            TraceMark(size: 17)
+            Text("Clipboard")
+                .font(.system(size: 15, weight: .semibold, design: .rounded))
+            Spacer()
+            if !model.store.items.isEmpty {
+                Text("\(model.store.items.count) items")
+                    .font(.system(size: 11, weight: .medium, design: .rounded))
+                    .foregroundStyle(.secondary)
+                    .contentTransition(.numericText())
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 3)
+                    .background(Color.primary.opacity(0.06), in: .capsule)
             }
             moreMenu
         }
-        .padding(.leading, 12)
-        .padding(.trailing, 6)
-        .frame(height: 36)
-        .background(Color.primary.opacity(0.07), in: .capsule)
+        .padding(.leading, 6)
+        .frame(height: 26)
     }
 
     private var moreMenu: some View {
@@ -70,6 +79,7 @@ struct HistoryView: View {
             Image(systemName: "ellipsis")
                 .font(.system(size: 13, weight: .semibold))
                 .frame(width: 26, height: 26)
+                .background(Color.primary.opacity(0.06), in: .circle)
                 .contentShape(Circle())
         }
         .menuStyle(.button)
@@ -78,6 +88,38 @@ struct HistoryView: View {
         .fixedSize()
         .foregroundStyle(.secondary)
         .accessibilityLabel("More")
+    }
+
+    // MARK: - Search
+
+    private var searchBar: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 13, weight: .semibold))
+                .foregroundStyle(isSearchFocused ? AnyShapeStyle(Brand.gradient) : AnyShapeStyle(.secondary))
+            TextField("Search", text: $model.query)
+                .textFieldStyle(.plain)
+                .font(.system(size: 14))
+                .focused($isSearchFocused)
+            if !model.query.isEmpty {
+                Button {
+                    model.query = ""
+                } label: {
+                    Image(systemName: "xmark.circle.fill")
+                }
+                .buttonStyle(.plain)
+                .foregroundStyle(.tertiary)
+                .transition(.scale.combined(with: .opacity))
+                .accessibilityLabel("Clear search")
+            }
+        }
+        .padding(.horizontal, 12)
+        .frame(height: 36)
+        .background(Color.primary.opacity(0.07), in: .capsule)
+        .overlay {
+            Capsule().strokeBorder(Color.primary.opacity(0.08), lineWidth: 0.5)
+        }
+        .animation(.snappy(duration: 0.2), value: model.query.isEmpty)
     }
 
     private var pausedBanner: some View {
@@ -100,29 +142,33 @@ struct HistoryView: View {
 
     @ViewBuilder
     private var content: some View {
-        let pinned = model.pinnedItems
-        let recent = model.recentItems
+        let sections = model.sections
+        let pinned = sections.pinned
+        let recent = sections.recent
         if pinned.isEmpty && recent.isEmpty {
             emptyState
+                .appearance(hasAppeared, delay: 0.06, reduceMotion: reduceMotion)
         } else {
             ScrollViewReader { proxy in
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 5) {
+                    LazyVStack(alignment: .leading, spacing: 6) {
                         if !pinned.isEmpty {
-                            SectionHeader(title: "Pinned")
+                            SectionHeader(title: "Pinned", symbol: "pin.fill")
                             rows(pinned, offset: 0)
-                            if !recent.isEmpty { SectionHeader(title: "Recent") }
+                            if !recent.isEmpty { SectionHeader(title: "Recent", symbol: "clock") }
                         }
                         rows(recent, offset: pinned.count)
                     }
-                    .animation(.snappy(duration: 0.22), value: model.visibleItems.map(\.id))
+                    .animation(.snappy(duration: 0.26), value: model.store.revision)
+                    .animation(.spring(response: 0.28, dampingFraction: 0.86), value: model.selectedID)
                 }
                 .scrollIndicators(.automatic)
                 .scrollContentBackground(.hidden)
                 .contentMargins(.vertical, 2, for: .scrollContent)
+                .scrollClipDisabled(false)
                 .onChange(of: model.selectedID) { _, id in
                     guard let id else { return }
-                    withAnimation(.snappy(duration: 0.18)) { proxy.scrollTo(id) }
+                    withAnimation(.snappy(duration: 0.2)) { proxy.scrollTo(id) }
                 }
             }
         }
@@ -130,10 +176,15 @@ struct HistoryView: View {
 
     private func rows(_ items: [ClipItem], offset: Int) -> some View {
         ForEach(Array(items.enumerated()), id: \.element.id) { position, item in
-            ClipRow(item: item, index: offset + position, isSelected: item.id == model.selectedID,
-                    store: model.store, actions: rowActions)
+            let index = offset + position
+            ClipRow(item: item, index: index, isSelected: item.id == model.selectedID,
+                    store: model.store, selection: selection, actions: rowActions)
                 .id(item.id)
-                .transition(.opacity.combined(with: .scale(scale: 0.97)))
+                .appearance(hasAppeared, delay: 0.05 + Double(min(index, 8)) * 0.028, reduceMotion: reduceMotion)
+                .transition(.asymmetric(
+                    insertion: .opacity.combined(with: .scale(scale: 0.96, anchor: .top)),
+                    removal: .opacity.combined(with: .scale(scale: 0.9))
+                ))
         }
     }
 
@@ -148,12 +199,20 @@ struct HistoryView: View {
 
     private var emptyState: some View {
         VStack(spacing: 8) {
-            Image(systemName: model.query.isEmpty ? "list.clipboard" : "magnifyingglass")
-                .font(.system(size: 34, weight: .light))
-                .foregroundStyle(.tertiary)
-                .padding(.bottom, 4)
+            Group {
+                if model.query.isEmpty {
+                    TraceMark(size: 44)
+                        .opacity(0.7)
+                } else {
+                    Image(systemName: "magnifyingglass")
+                        .font(.system(size: 34, weight: .light))
+                        .foregroundStyle(.tertiary)
+                }
+            }
+            .frame(height: 48)
+            .padding(.bottom, 4)
             Text(model.query.isEmpty ? "Nothing copied yet" : "No results")
-                .font(.system(size: 14, weight: .semibold))
+                .font(.system(size: 14, weight: .semibold, design: .rounded))
             Text(model.query.isEmpty ? "Copy something and it will show up here." : "Try searching for something else.")
                 .font(.system(size: 12))
                 .foregroundStyle(.secondary)
@@ -173,20 +232,29 @@ struct HistoryView: View {
             Spacer(minLength: 0)
         }
         .padding(.horizontal, 6)
-        .padding(.bottom, 1)
     }
 }
 
 private struct SectionHeader: View {
     let title: LocalizedStringKey
+    let symbol: String
 
     var body: some View {
-        Text(title)
-            .font(.system(size: 11, weight: .semibold))
-            .foregroundStyle(.secondary)
+        Label(title, systemImage: symbol)
+            .labelStyle(SectionLabelStyle())
             .padding(.horizontal, 6)
             .padding(.top, 4)
             .accessibilityAddTraits(.isHeader)
+    }
+}
+
+private struct SectionLabelStyle: LabelStyle {
+    func makeBody(configuration: Configuration) -> some View {
+        HStack(spacing: 5) {
+            configuration.icon.font(.system(size: 9, weight: .bold))
+            configuration.title.font(.system(size: 11, weight: .semibold, design: .rounded))
+        }
+        .foregroundStyle(.secondary)
     }
 }
 
@@ -205,5 +273,19 @@ private struct KeyHint: View {
                 .font(.system(size: 10.5))
         }
         .foregroundStyle(.secondary)
+    }
+}
+
+private extension View {
+    /// Fades and drops a piece of the panel into place when it opens.
+    func appearance(_ visible: Bool, delay: Double, reduceMotion: Bool) -> some View {
+        self
+            .opacity(visible ? 1 : 0)
+            .offset(y: visible || reduceMotion ? 0 : -10)
+            .scaleEffect(visible || reduceMotion ? 1 : 0.97, anchor: .top)
+            .blur(radius: visible || reduceMotion ? 0 : 3)
+            .animation(reduceMotion ? .easeOut(duration: 0.15)
+                                    : .spring(response: 0.42, dampingFraction: 0.78).delay(delay),
+                       value: visible)
     }
 }

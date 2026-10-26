@@ -58,6 +58,7 @@ final class PanelController {
     private var glass: NSGlassEffectView?
     private var model: PanelModel?
     private var mouseMonitor: Any?
+    private var purgeTask: Task<Void, Never>?
     private var isClosing = false
     private var generation = 0
     private(set) var lastCloseDate = Date.distantPast
@@ -76,6 +77,7 @@ final class PanelController {
 
     func show() {
         guard !isVisible else { return }
+        purgeTask?.cancel()
         generation += 1
         isClosing = false
         let panel = self.panel ?? makePanel()
@@ -96,22 +98,37 @@ final class PanelController {
         }
         self.model = model
 
+        // The content keeps its full size and stays pinned to the top while the
+        // glass grows around it, so it is revealed like a menu dropping down.
+        let container = NSView(frame: NSRect(origin: .zero, size: Self.size))
+        container.wantsLayer = true
+        container.layer?.masksToBounds = true
         let hosting = NSHostingView(rootView: HistoryView(model: model, settings: settings))
         hosting.sizingOptions = []
-        glass?.contentView = hosting
+        hosting.frame = NSRect(origin: .zero, size: Self.size)
+        hosting.autoresizingMask = [.minYMargin, .minXMargin, .maxXMargin]
+        container.addSubview(hosting)
+        glass?.contentView = container
 
         let frame = targetFrame()
         let reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
         panel.alphaValue = 0
-        panel.setFrame(reduceMotion ? frame : frame.offsetBy(dx: 0, dy: 14), display: false)
+        panel.setFrame(reduceMotion ? frame : collapsedFrame(for: frame), display: false)
         panel.makeKeyAndOrderFront(nil)
-        panel.invalidateShadow()
 
         NSAnimationContext.runAnimationGroup { context in
-            context.duration = reduceMotion ? 0.12 : 0.26
-            context.timingFunction = CAMediaTimingFunction(controlPoints: 0.16, 1, 0.3, 1)
-            panel.animator().alphaValue = 1
+            context.duration = reduceMotion ? 0.15 : 0.42
+            // Fast start, long soft landing.
+            context.timingFunction = CAMediaTimingFunction(controlPoints: 0.12, 0.9, 0.18, 1)
+            context.allowsImplicitAnimation = true
             panel.animator().setFrame(frame, display: true)
+        }
+        NSAnimationContext.runAnimationGroup { context in
+            context.duration = reduceMotion ? 0.15 : 0.16
+            context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            panel.animator().alphaValue = 1
+        } completionHandler: { [weak panel] in
+            MainActor.assumeIsolated { panel?.invalidateShadow() }
         }
 
         installMouseMonitor()
@@ -125,9 +142,12 @@ final class PanelController {
         let generation = generation
 
         if animated {
+            let reduceMotion = NSWorkspace.shared.accessibilityDisplayShouldReduceMotion
+            let target = reduceMotion ? panel.frame : collapsedFrame(for: panel.frame)
             NSAnimationContext.runAnimationGroup { context in
-                context.duration = 0.14
-                context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+                context.duration = 0.18
+                context.timingFunction = CAMediaTimingFunction(controlPoints: 0.4, 0, 0.9, 0.6)
+                panel.animator().setFrame(target, display: true)
                 panel.animator().alphaValue = 0
             } completionHandler: { [weak self] in
                 MainActor.assumeIsolated { self?.finishClosing(generation: generation) }
@@ -142,9 +162,18 @@ final class PanelController {
         guard generation == self.generation, let panel else { return }
         panel.orderOut(nil)
         panel.alphaValue = 1
+        panel.setFrame(NSRect(origin: panel.frame.origin, size: Self.size), display: false)
         glass?.contentView = nil
         model = nil
         isClosing = false
+
+        // Drop cached thumbnails if the panel stays closed for a while.
+        purgeTask?.cancel()
+        purgeTask = Task { [weak self] in
+            try? await Task.sleep(for: .seconds(20))
+            guard !Task.isCancelled else { return }
+            self?.store.purgeThumbnails()
+        }
     }
 
     // MARK: - Private
@@ -188,6 +217,13 @@ final class PanelController {
         let x = clamp(mouse.x - size.width / 2, visible.minX + gap, visible.maxX - size.width - gap)
         let y = clamp(mouse.y - size.height - 12, visible.minY + gap, visible.maxY - size.height - gap)
         return NSRect(x: x, y: y, width: size.width, height: size.height)
+    }
+
+    /// A small pill at the top edge of `frame`, where the panel starts and ends.
+    private func collapsedFrame(for frame: NSRect) -> NSRect {
+        let width = frame.width * 0.86
+        let height: CGFloat = 64
+        return NSRect(x: frame.midX - width / 2, y: frame.maxY - height, width: width, height: height)
     }
 
     private func clamp(_ value: CGFloat, _ lower: CGFloat, _ upper: CGFloat) -> CGFloat {
