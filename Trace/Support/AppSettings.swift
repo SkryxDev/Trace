@@ -23,6 +23,10 @@ final class AppSettings {
     @ObservationIgnored var onShortcutChange: ((Shortcut) -> Void)?
     @ObservationIgnored var onHistoryLimitChange: ((Int) -> Void)?
     @ObservationIgnored var onPausedChange: ((Bool) -> Void)?
+    @ObservationIgnored var onRecordingShortcut: ((Bool) -> Void)?
+
+    /// `false` when the shortcut could not be registered (taken by another app).
+    var isShortcutAvailable = true
 
     var shortcut: Shortcut {
         didSet {
