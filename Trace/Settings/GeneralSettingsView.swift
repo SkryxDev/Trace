@@ -54,9 +54,15 @@ struct GeneralSettingsView: View {
                 }
                 if settings.autoPaste && !isTrusted {
                     HStack {
-                        Label("Trace needs Accessibility access to paste for you.",
-                              systemImage: "hand.raised.fill")
-                            .foregroundStyle(.secondary)
+                        VStack(alignment: .leading, spacing: 3) {
+                            Label("Trace needs Accessibility access to paste for you.",
+                                  systemImage: "hand.raised.fill")
+                                .foregroundStyle(.secondary)
+                            Text("Already allowed? After an update, remove Trace from the list with − and allow it again.")
+                                .font(.caption)
+                                .foregroundStyle(.tertiary)
+                                .padding(.leading, 26)
+                        }
                         Spacer()
                         Button("Grant Access…") {
                             Paster.requestAccess()

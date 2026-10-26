@@ -171,6 +171,16 @@
         }
       }
     },
+    "Already allowed? After an update, remove Trace from the list with − and allow it again.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Già consentito? Dopo un aggiornamento, rimuovi Trace dall'elenco con − e consentilo di nuovo."
+          }
+        }
+      }
+    },
     "Ask each time": {
       "localizations": {
         "it": {
