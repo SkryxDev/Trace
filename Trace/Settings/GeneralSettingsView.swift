@@ -58,14 +58,20 @@ struct GeneralSettingsView: View {
                             Label("Trace needs Accessibility access to paste for you.",
                                   systemImage: "hand.raised.fill")
                                 .foregroundStyle(.secondary)
-                            Text("Already allowed? Click Grant Access, then switch Trace on again in the list.")
+                            Text("Click Grant Access and switch Trace on in the list. Already on? Restart Trace.")
                                 .font(.caption)
                                 .foregroundStyle(.tertiary)
                                 .padding(.leading, 26)
                         }
                         Spacer()
-                        Button("Grant Access…") {
-                            Paster.refreshAccess()
+                        VStack(alignment: .trailing, spacing: 6) {
+                            Button("Grant Access…") {
+                                Paster.refreshAccess()
+                            }
+                            Button("Restart Trace") {
+                                Paster.relaunch()
+                            }
+                            .controlSize(.small)
                         }
                     }
                 }

@@ -171,16 +171,6 @@
         }
       }
     },
-    "Already allowed? Click Grant Access, then switch Trace on again in the list.": {
-      "localizations": {
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Già consentito? Fai clic su Concedi accesso, poi riattiva Trace nell'elenco."
-          }
-        }
-      }
-    },
     "Ask each time": {
       "localizations": {
         "it": {
@@ -257,6 +247,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Svuotare la cronologia degli appunti?"
+          }
+        }
+      }
+    },
+    "Click Grant Access and switch Trace on in the list. Already on? Restart Trace.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fai clic su Concedi accesso e attiva Trace nell'elenco. Già attivo? Riavvia Trace."
           }
         }
       }
@@ -817,6 +817,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Ripristina %@"
+          }
+        }
+      }
+    },
+    "Restart Trace": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Riavvia Trace"
           }
         }
       }

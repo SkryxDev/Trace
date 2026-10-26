@@ -28,20 +28,40 @@ final class Paster {
         _ = AXIsProcessTrustedWithOptions(options)
     }
 
+    private static var hasResetAccess = false
+
     /// Clears Trace's entries from the Accessibility list, then asks again.
     /// An entry left by an older build stays switched on in System Settings
     /// but no longer matches the app, so macOS keeps reporting no access.
+    /// The reset runs once per launch, so clicking again never removes an
+    /// entry the user has just added.
     static func refreshAccess() {
         guard !isTrusted, let bundleID = Bundle.main.bundleIdentifier else { return }
-        let reset = Process()
-        reset.executableURL = URL(fileURLWithPath: "/usr/bin/tccutil")
-        reset.arguments = ["reset", "Accessibility", bundleID]
-        reset.standardOutput = FileHandle.nullDevice
-        reset.standardError = FileHandle.nullDevice
-        try? reset.run()
-        reset.waitUntilExit()
-        requestAccess()
-        NSWorkspace.shared.open(Links.accessibilitySettings)
+        if !hasResetAccess {
+            hasResetAccess = true
+            let reset = Process()
+            reset.executableURL = URL(fileURLWithPath: "/usr/bin/tccutil")
+            reset.arguments = ["reset", "Accessibility", bundleID]
+            reset.standardOutput = FileHandle.nullDevice
+            reset.standardError = FileHandle.nullDevice
+            try? reset.run()
+            reset.waitUntilExit()
+        }
+        // Give tccd a moment after the reset, so the prompt adds Trace to the list.
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            requestAccess()
+            NSWorkspace.shared.open(Links.accessibilitySettings)
+        }
+    }
+
+    /// Starts a fresh copy of Trace and quits this one, for when macOS only
+    /// applies a newly granted permission to new processes.
+    static func relaunch() {
+        let reopen = Process()
+        reopen.executableURL = URL(fileURLWithPath: "/bin/sh")
+        reopen.arguments = ["-c", "sleep 0.6; /usr/bin/open \"$0\"", Bundle.main.bundleURL.path]
+        try? reopen.run()
+        NSApp.terminate(nil)
     }
 
     func copy(_ item: ClipItem, plainText: Bool = false) {
