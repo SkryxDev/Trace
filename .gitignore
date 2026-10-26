@@ -13,3 +13,4 @@ xcuserdata/
 .build/
 .swiftpm/
 build-ui/
+dist/
