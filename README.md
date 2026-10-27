@@ -5,6 +5,10 @@
 <h1 align="center">Trace</h1>
 
 <p align="center">
+  <a href="https://ko-fi.com/K0O529L823"><img src="https://ko-fi.com/img/githubbutton_sm.svg" alt="Support me on Ko-fi"></a>
+</p>
+
+<p align="center">
   A tiny, fast clipboard history for macOS — like <kbd>Win</kbd> + <kbd>V</kbd> on Windows, made for the Mac.
 </p>
 
