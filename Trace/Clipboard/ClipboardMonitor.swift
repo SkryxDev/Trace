@@ -53,22 +53,34 @@ final class ClipboardMonitor {
         lastChangeCount = changeCount
         guard !settings.isPaused else { return }
 
-        let source = NSWorkspace.shared.frontmostApplication?.bundleIdentifier
-        if let source, source == Bundle.main.bundleIdentifier || settings.excludedApps.contains(source) {
-            return
-        }
         autoreleasepool {
-            if let capture = read(source: source) {
+            guard let items = pasteboard.pasteboardItems, !items.isEmpty else { return }
+            let allTypes = Set(items.flatMap { $0.types.map(\.rawValue) })
+
+            // Universal Clipboard: the copy was made on an iPhone, iPad or
+            // another Mac, so the app in front here is not where it came from.
+            let isFromOtherDevice = allTypes.contains(Self.remoteClipboardType)
+            let source: String?
+            if isFromOtherDevice {
+                guard settings.recordOtherDevices else { return }
+                source = nil
+            } else {
+                source = NSWorkspace.shared.frontmostApplication?.bundleIdentifier
+                if let source, source == Bundle.main.bundleIdentifier || settings.excludedApps.contains(source) {
+                    return
+                }
+            }
+            if settings.ignoreSensitive, !allTypes.isDisjoint(with: Self.sensitiveTypes) { return }
+
+            if var capture = read(items, source: source) {
+                capture.isFromOtherDevice = isFromOtherDevice
                 onCapture?(capture)
             }
         }
     }
 
-    private func read(source: String?) -> Capture? {
-        guard let items = pasteboard.pasteboardItems, let first = items.first else { return nil }
-
-        let allTypes = Set(items.flatMap { $0.types.map(\.rawValue) })
-        if settings.ignoreSensitive, !allTypes.isDisjoint(with: Self.sensitiveTypes) { return nil }
+    private func read(_ items: [NSPasteboardItem], source: String?) -> Capture? {
+        guard let first = items.first else { return nil }
 
         // Files (Finder copies one pasteboard item per file).
         let fileURLs = (pasteboard.readObjects(forClasses: [NSURL.self],
@@ -126,6 +138,10 @@ final class ClipboardMonitor {
     }
 
     // MARK: - Helpers
+
+    /// Added by macOS to content that arrives through Universal Clipboard.
+    /// Not documented, but stable since macOS Sierra and used by other clipboard managers.
+    private static let remoteClipboardType = "com.apple.is-remote-clipboard"
 
     /// Types used by password managers and other apps to mark data that
     /// clipboard managers should not record (see nspasteboard.org).

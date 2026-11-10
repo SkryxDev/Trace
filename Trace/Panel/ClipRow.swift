@@ -178,7 +178,12 @@ struct ClipRow: View {
 
     private var metadata: some View {
         HStack(spacing: 4) {
-            if let bundleID = item.sourceBundleID, let icon = AppInfo.icon(for: bundleID) {
+            if item.fromOtherDevice {
+                Image(systemName: "iphone.gen3")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundStyle(Brand.gradient)
+                    .frame(width: 13, height: 13)
+            } else if let bundleID = item.sourceBundleID, let icon = AppInfo.icon(for: bundleID) {
                 Image(nsImage: icon)
                     .resizable()
                     .frame(width: 13, height: 13)
@@ -188,11 +193,16 @@ struct ClipRow: View {
         }
         .font(.system(size: 11))
         .foregroundStyle(.secondary)
+        .help(item.fromOtherDevice ? Text("Copied on your iPhone, iPad or another Mac with Universal Clipboard") : Text(verbatim: ""))
     }
 
     private var metadataText: String {
         var parts: [String] = []
-        if let bundleID = item.sourceBundleID { parts.append(AppInfo.name(for: bundleID)) }
+        if item.fromOtherDevice {
+            parts.append(ClipItem.otherDeviceLabel)
+        } else if let bundleID = item.sourceBundleID {
+            parts.append(AppInfo.name(for: bundleID))
+        }
         if item.kind == .image, let width = item.pixelWidth, let height = item.pixelHeight {
             parts.append("\(width) × \(height)")
         }

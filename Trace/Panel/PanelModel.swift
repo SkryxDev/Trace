@@ -56,8 +56,11 @@ final class PanelModel {
     var visibleItems: [ClipItem] { sections.all }
 
     /// Every word must appear in the text or in the source app's name, in any order.
+    /// Copies from other devices also match "iPhone", "iPad" and the device label.
     private func matches(_ item: ClipItem, _ words: [String]) -> Bool {
-        let appName = item.sourceBundleID.map(AppInfo.name(for:)) ?? ""
+        let appName = item.fromOtherDevice
+            ? "\(ClipItem.otherDeviceLabel) iPhone iPad Mac"
+            : item.sourceBundleID.map(AppInfo.name(for:)) ?? ""
         return words.allSatisfy { word in
             item.preview.localizedStandardContains(word) || appName.localizedStandardContains(word)
         }

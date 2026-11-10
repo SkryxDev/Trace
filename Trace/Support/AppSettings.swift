@@ -51,6 +51,11 @@ final class AppSettings {
         didSet { defaults.set(ignoreSensitive, forKey: Keys.ignoreSensitive) }
     }
 
+    /// Records copies made on an iPhone, iPad or another Mac (Universal Clipboard).
+    var recordOtherDevices: Bool {
+        didSet { defaults.set(recordOtherDevices, forKey: Keys.recordOtherDevices) }
+    }
+
     /// Bundle identifiers of apps whose copies are never recorded.
     var excludedApps: [String] {
         didSet { defaults.set(excludedApps, forKey: Keys.excludedApps) }
@@ -76,6 +81,7 @@ final class AppSettings {
             Keys.autoPaste: true,
             Keys.historyLimit: 200,
             Keys.ignoreSensitive: true,
+            Keys.recordOtherDevices: true,
         ])
         if let data = defaults.data(forKey: Keys.shortcut),
            let stored = try? JSONDecoder().decode(Shortcut.self, from: data) {
@@ -86,6 +92,7 @@ final class AppSettings {
         autoPaste = defaults.bool(forKey: Keys.autoPaste)
         historyLimit = defaults.integer(forKey: Keys.historyLimit)
         ignoreSensitive = defaults.bool(forKey: Keys.ignoreSensitive)
+        recordOtherDevices = defaults.bool(forKey: Keys.recordOtherDevices)
         excludedApps = defaults.stringArray(forKey: Keys.excludedApps) ?? []
         panelPosition = PanelPosition(rawValue: defaults.string(forKey: Keys.panelPosition) ?? "") ?? .menuBar
         isPaused = defaults.bool(forKey: Keys.isPaused)
@@ -97,6 +104,7 @@ final class AppSettings {
         static let autoPaste = "autoPaste"
         static let historyLimit = "historyLimit"
         static let ignoreSensitive = "ignoreSensitive"
+        static let recordOtherDevices = "recordOtherDevices"
         static let excludedApps = "excludedApps"
         static let panelPosition = "panelPosition"
         static let isPaused = "isPaused"

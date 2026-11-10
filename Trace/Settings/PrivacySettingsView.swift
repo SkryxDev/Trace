@@ -18,6 +18,10 @@ struct PrivacySettingsView: View {
                     Text("Ignore passwords and sensitive data")
                     Text("Skips anything password managers and other apps mark as confidential or temporary.")
                 }
+                Toggle(isOn: $settings.recordOtherDevices) {
+                    Text("Record copies from iPhone and iPad")
+                    Text("Saves what you copy on your other Apple devices with Universal Clipboard, marked with a device icon.")
+                }
             }
 
             Section {

@@ -47,7 +47,9 @@ final class HistoryStore {
         if let index = items.firstIndex(where: { $0.digest == capture.digest && $0.kind == capture.kind }) {
             var existing = items.remove(at: index)
             existing.date = .now
-            existing.sourceBundleID = capture.sourceBundleID ?? existing.sourceBundleID
+            // Describe where the latest copy came from.
+            existing.sourceBundleID = capture.isFromOtherDevice ? nil : capture.sourceBundleID ?? existing.sourceBundleID
+            existing.isFromOtherDevice = capture.isFromOtherDevice ? true : nil
             items.insert(existing, at: 0)
         } else {
             let item = ClipItem(
@@ -61,6 +63,7 @@ final class HistoryStore {
                 byteCount: capture.representations.reduce(0) { $0 + $1.data.count },
                 digest: capture.digest,
                 sourceBundleID: capture.sourceBundleID,
+                isFromOtherDevice: capture.isFromOtherDevice ? true : nil,
                 date: .now,
                 isPinned: false
             )

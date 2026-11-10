@@ -29,8 +29,17 @@ nonisolated struct ClipItem: Codable, Identifiable, Hashable, Sendable {
     /// Hash of the primary content, used to de-duplicate copies.
     var digest: String
     var sourceBundleID: String?
+    /// `true` when the copy came from another device through Universal
+    /// Clipboard (an iPhone, iPad or another Mac). Optional so history saved
+    /// by older versions still decodes.
+    var isFromOtherDevice: Bool?
     var date: Date
     var isPinned: Bool
+
+    var fromOtherDevice: Bool { isFromOtherDevice ?? false }
+
+    /// Shown instead of an app name for Universal Clipboard copies.
+    static var otherDeviceLabel: String { String(localized: "From another device") }
 
     var fileURLs: [URL] { (files ?? []).map { URL(fileURLWithPath: $0) } }
 
@@ -56,4 +65,5 @@ nonisolated struct Capture: Sendable {
     var pixelHeight: Int?
     var digest: String
     var sourceBundleID: String?
+    var isFromOtherDevice = false
 }

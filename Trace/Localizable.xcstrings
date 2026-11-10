@@ -301,6 +301,16 @@
         }
       }
     },
+    "Copied on your iPhone, iPad or another Mac with Universal Clipboard": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Copiato su iPhone, iPad o un altro Mac con Appunti universali"
+          }
+        }
+      }
+    },
     "Copy": {
       "localizations": {
         "it": {
@@ -397,6 +407,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Software libero con licenza"
+          }
+        }
+      }
+    },
+    "From another device": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Da un altro dispositivo"
           }
         }
       }
@@ -771,6 +791,16 @@
         }
       }
     },
+    "Record copies from iPhone and iPad": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Registra le copie da iPhone e iPad"
+          }
+        }
+      }
+    },
     "Recording is paused": {
       "localizations": {
         "it": {
@@ -847,6 +877,16 @@
           "stringUnit": {
             "state": "translated",
             "value": "Riprendi la registrazione"
+          }
+        }
+      }
+    },
+    "Saves what you copy on your other Apple devices with Universal Clipboard, marked with a device icon.": {
+      "localizations": {
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Salva ciò che copi sugli altri dispositivi Apple con Appunti universali, segnalato da un'icona."
           }
         }
       }
